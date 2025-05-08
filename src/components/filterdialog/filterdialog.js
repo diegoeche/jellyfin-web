@@ -41,6 +41,7 @@ function renderOptions(context, selector, cssClass, items, isCheckedFn) {
 }
 
 function renderFilters(context, result, query) {
+    result.OfficialRatings.push('Undefined');
     renderOptions(context, '.genreFilters', 'chkGenreFilter', merge(result.Genres, query.Genres, '|'), function (i) {
         const delimeter = '|';
         return (delimeter + (query.Genres || '') + delimeter).includes(delimeter + i + delimeter);
@@ -400,19 +401,29 @@ class FilterDialog {
             const chkOfficialRatingFilter = dom.parentWithClass(e.target, 'chkOfficialRatingFilter');
             if (chkOfficialRatingFilter) {
                 const filterName = chkOfficialRatingFilter.getAttribute('data-filter');
-                let filters = query.OfficialRatings || '';
-                const delimiter = '|';
-                filters = filters
-                    .split(delimiter)
-                    .filter((f) => f !== filterName)
-                    .join(delimiter);
-                if (chkOfficialRatingFilter.checked) {
-                    filters = filters ? (filters + delimiter + filterName) : filterName;
-                }
-                query.StartIndex = 0;
-                query.OfficialRatings = filters;
+                // Handle special "Undefined" logic
+                if (filterName === "Undefined") {
+		    if (chkOfficialRatingFilter.checked) {
+                        query.HasOfficialRating = "False";
+		    } else {
+		        delete query.HasOfficialRating;
+		    }
+                } else {
+                    let filters = query.OfficialRatings || '';
+                    const delimiter = '|';
+                    filters = filters
+                      .split(delimiter)
+                      .filter((f) => f !== filterName)
+                      .join(delimiter);
+                    if (chkOfficialRatingFilter.checked) {
+                      filters = filters ? (filters + delimiter + filterName) : filterName;
+                    }
+                    query.StartIndex = 0;
+                    query.OfficialRatings = filters;
+	        }
+	        console.log(query)
                 triggerChange(this);
-            }
+	    }
         });
     }
 
