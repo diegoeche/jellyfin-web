@@ -403,11 +403,11 @@ class FilterDialog {
                 const filterName = chkOfficialRatingFilter.getAttribute('data-filter');
                 // Handle special "Undefined" logic
                 if (filterName === "Undefined") {
-		    if (chkOfficialRatingFilter.checked) {
+                    if (chkOfficialRatingFilter.checked) {
                         query.HasOfficialRating = "False";
-		    } else {
-		        delete query.HasOfficialRating;
-		    }
+                    } else {
+                        delete query.HasOfficialRating;
+                    }
                 } else {
                     let filters = query.OfficialRatings || '';
                     const delimiter = '|';
@@ -420,10 +420,10 @@ class FilterDialog {
                     }
                     query.StartIndex = 0;
                     query.OfficialRatings = filters;
-	        }
-	        console.log(query)
+                }
+                console.log(query)
                 triggerChange(this);
-	    }
+            }
         });
     }
 
